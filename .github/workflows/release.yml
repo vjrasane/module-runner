@@ -1,0 +1,24 @@
+name: Release
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write # push tag + create GitHub Release
+  issues: write
+  pull-requests: write
+  id-token: write # OIDC → npm trusted publishing + provenance
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # semantic-release analyzes full history + tags
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # npm 11+, required for trusted publishing
+          cache: npm
+      - run: npm clean-install
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # no NPM_TOKEN — OIDC handles npm auth
