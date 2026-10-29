@@ -1,0 +1,16 @@
+node_modules/
+collections/
+dist/
+.venv/
+.devenv/
+.devenv.flake.nix
+.direnv/
+.superpowers/
+devenv.lock
+inventory.yml
+inventory.yaml
+*.pyc
+*.md
+
+!docs/*.md
+!README.md

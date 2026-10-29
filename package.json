@@ -1,0 +1,47 @@
+{
+  "name": "module-runner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./builtin": {
+      "types": "./dist/builtin/index.d.ts",
+      "default": "./dist/builtin/index.js"
+    }
+  },
+  "bin": {
+    "module-runner-generate": "./dist/cli/generate.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx",
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "codegen": "tsx src/codegen/codegen-builtin.ts",
+    "generate": "tsx src/codegen/generate.ts",
+    "check:bootstrap": "tsx scripts/check-bootstrap.ts",
+    "test": "vitest run",
+    "prepublishOnly": "npm run check:bootstrap && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "ts-poet": "^6.12.0",
+    "vscode-jsonrpc": "^10.0.0"
+  }
+}
