@@ -1,11 +1,10 @@
-#!/usr/bin/env node
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emitCollection } from "./emit.ts";
 import { runJob } from "./lib.ts";
 import { bootstrap } from "src/core/server.ts";
 
-// `module-runner-generate <collection> [--version X] [--out DIR]`: generate the TypeScript
+// `module-runner generate <collection> [--version X] [--out DIR]`: generate the TypeScript
 // bindings (typed args/returns) for a community collection into the caller's own repo.
 // Each module emits only its identity + the pinned collection version — the server owns
 // ansible-core and builds the execution payload, so no module source is shipped.
@@ -15,26 +14,26 @@ interface Args {
   out: string;
 }
 
-function parseArgs(argv: string[]): Args {
-  const rest = argv.slice(2);
-  const collection = rest.find((a) => !a.startsWith("--"));
+// `args` are the CLI tokens after the subcommand (no node/script/command prefix).
+function parseArgs(args: string[]): Args {
+  const collection = args.find((a) => !a.startsWith("--"));
   if (!collection) {
     console.error(
-      "usage: module-runner-generate <collection> [--version <v>] [--out <dir>]",
+      "usage: module-runner generate <collection> [--version <v>] [--out <dir>]",
     );
     process.exit(2);
   }
   const flag = (name: string) => {
-    const i = rest.indexOf(`--${name}`);
-    return i >= 0 ? rest[i + 1] : undefined;
+    const i = args.indexOf(`--${name}`);
+    return i >= 0 ? args[i + 1] : undefined;
   };
   const out =
     flag("out") ?? path.join(process.cwd(), "ansible", ...collection.split("."));
   return { collection, version: flag("version"), out };
 }
 
-async function main() {
-  const { collection, version, out } = parseArgs(process.argv);
+export async function run(args: string[]): Promise<void> {
+  const { collection, version, out } = parseArgs(args);
 
   // Introspect under the server venv's ansible-core (the same pinned runtime the server
   // uses), so generation needs no system python/ansible — only the bootstrapped venv.
@@ -56,5 +55,3 @@ async function main() {
   );
   console.error(`generated ${collection}@${result.version} → ${out}`);
 }
-
-main();

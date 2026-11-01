@@ -18,7 +18,7 @@ npm install module-runner
 ## Generate community collection bindings
 
 ```sh
-npx module-runner-generate <namespace.collection> [--version <v>] [--out <dir>]
+npx module-runner generate <namespace.collection> [--version <v>] [--out <dir>]
 ```
 
 The server installs the collection and introspects it; the emitted bindings pin the
