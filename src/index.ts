@@ -11,7 +11,7 @@ export {
 
 import { currentHost as _currentHost } from "src/core/context.ts";
 import { gatherFacts } from "src/core/backend.ts";
-export { host, type HostRef } from "src/core/host.ts";
+export { localhost, host, type HostRef } from "src/core/host.ts";
 export type { HostFacts } from "src/core/facts.ts";
 export type { SSHConfig } from "src/core/connection.ts";
 import type { HostRef } from "src/core/host.ts";
