@@ -47,7 +47,8 @@ async function resolveBootstrapScript(env: NodeJS.ProcessEnv): Promise<string> {
   }
 
   const res = await fetch(BOOTSTRAP_URL);
-  if (!res.ok) throw new Error(`bootstrap: GET ${BOOTSTRAP_URL} → ${res.status}`);
+  if (!res.ok)
+    throw new Error(`bootstrap: GET ${BOOTSTRAP_URL} → ${res.status}`);
   const buf = Buffer.from(await res.arrayBuffer());
   const got = sha256(buf);
   if (got !== BOOTSTRAP_SHA256)
@@ -102,6 +103,7 @@ export interface RunActionParams {
   args?: Record<string, unknown>;
   vars?: Record<string, unknown>;
   flags?: Record<string, unknown>;
+  env?: Record<string, string>;
   // Pinned collection to install server-side before running (omit for ansible.builtin).
   collection?: { name: string; version: string; source?: string };
 }
@@ -190,7 +192,11 @@ export class ServerClient {
   private async request<T>(method: string, params: object): Promise<T> {
     if (this.inflight++ === 0) this.setStreamsRef(true);
     try {
-      return await this.conn.sendRequest(method, ParameterStructures.byName, params);
+      return await this.conn.sendRequest(
+        method,
+        ParameterStructures.byName,
+        params,
+      );
     } finally {
       if (--this.inflight === 0) this.setStreamsRef(false);
     }
