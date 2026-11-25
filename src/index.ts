@@ -2,6 +2,7 @@ export {
   type AnsibleModuleMeta,
   type ModuleFn,
   type ModuleResult,
+  type ModuleExecOpts,
   ModuleError,
   define,
 } from "src/module/module.ts";
